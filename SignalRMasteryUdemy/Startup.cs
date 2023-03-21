@@ -27,7 +27,7 @@ namespace SignalRMasteryUdemy
 
             app.UseEndpoints(configure =>
             {
-                configure.MapHub<ColorHub>("/hub/color");
+                configure.MapHub<UserHub>("/hub/users");
             });
         }
     }

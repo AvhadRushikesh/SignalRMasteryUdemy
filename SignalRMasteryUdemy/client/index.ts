@@ -1,34 +1,32 @@
 ﻿import * as signalR from "@microsoft/signalr"
 
-let btnJoinYellow = document.getElementById("btnJoinYellow");
-let btnJoinBlue = document.getElementById("btnJoinBlue");
-let btnJoinOrange = document.getElementById("btnJoinOrange");
-let btnTriggerYellow = document.getElementById("btnTriggerYellow");
-let btnTriggerBlue = document.getElementById("btnTriggerBlue");
-let btnTriggerOrange = document.getElementById("btnTriggerOrange");
+let btnGetOne = document.getElementById("btnGetOne");
+let btnGetTen = document.getElementById("btnGetTen");
+let btnGetOneThousand = document.getElementById("btnGetOneThousand");
+let userJson = document.getElementById("userJson") as HTMLTextAreaElement;
 
-//  Create Connection
+function receiveUsers(users) {
+    userJson.value = JSON.stringify(users, null, 2);
+}
+function clear() {
+    userJson.value = "Loading...";
+}
+
+btnGetOne.addEventListener("click", () => { clear(); connection.invoke("GetUsers", 1).then(receiveUsers); });
+btnGetTen.addEventListener("click", () => { clear(); connection.invoke("GetUsers", 10).then(receiveUsers); });
+btnGetOneThousand.addEventListener("click", () => { clear(); connection.invoke("GetUsers", 1000).then(receiveUsers); });
+
+// create connection
 let connection = new signalR.HubConnectionBuilder()
-    .withUrl("/hub/color")
+    .configureLogging(signalR.LogLevel.Trace)
+    .withUrl("/hub/users")
     .build();
 
-btnJoinYellow.addEventListener("click", () => { connection.invoke("JoinGroup", "Yellow"); });
-btnJoinBlue.addEventListener("click", () => { connection.invoke("JoinGroup", "Blue"); });
-btnJoinOrange.addEventListener("click", () => { connection.invoke("JoinGroup", "Orange"); });
-
-btnTriggerYellow.addEventListener("click", () => { connection.invoke("TriggerGroup", "Yellow"); });
-btnTriggerBlue.addEventListener("click", () => { connection.invoke("TriggerGroup", "Blue"); });
-btnTriggerOrange.addEventListener("click", () => { connection.invoke("TriggerGroup", "Orange"); });
-
 // client events
-connection.on("triggerColor", (color) => {
-    document.getElementsByTagName("body")[0].style.backgroundColor = color;
-});
 
 // start the connection
 function startSuccess() {
     console.log("Connected.");
-    connection.invoke("IncrementServerView");
 }
 function startFail() {
     console.log("Connection failed.");
