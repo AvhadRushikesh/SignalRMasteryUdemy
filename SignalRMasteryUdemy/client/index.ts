@@ -1,22 +1,25 @@
 ﻿import * as signalR from "@microsoft/signalr"
 
-let btn = document.getElementById("btnGetFullName");
+let btn = document.getElementById("incrementView");
+let viewCountSpan = document.getElementById("viewCount");
 
 //  Create Connection
 let connection = new signalR.HubConnectionBuilder()
-    .withUrl("/hub/stringtools")
+    .withUrl("/hub/view")
     .build();
 
 btn.addEventListener("click", function (evt) {
-    var firstName = (document.getElementById("inputFirstName") as HTMLInputElement).value;
-    var lastName = (document.getElementById("inputLastName") as HTMLInputElement).value;
-
     //  send to hub
-
-    connection.invoke("getFullName", firstName, lastName)
-        .then((name: string) => { alert(name); });
+    connection.invoke("IncrementServerView");
 });
 
+// client events
+connection.on("incrementView", (val) => {
+    viewCountSpan.innerText = val;
+
+    //  If value divisible 10 disconnect connection
+    if (val % 10 === 0) connection.off("incrementView");
+});
 
 //  Start Connection
 function startSuccess() {

@@ -27,7 +27,7 @@ namespace SignalRMasteryUdemy
 
             app.UseEndpoints(configure =>
             {
-                configure.MapHub<StringToolsHub>("/hub/stringtools");
+                configure.MapHub<ViewHub>("/hub/view");
             });
         }
     }

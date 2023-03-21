@@ -8,11 +8,11 @@ namespace SignalRMasteryUdemy.Hubs
     {
         public static int ViewCount { get; set; } = 0;
 
-        public async Task NotifyWatching()
+        public Task IncrementServerView()
         {
             ViewCount++;
 
-            await this.Clients.All.SendAsync("viewCountUpdate", ViewCount);
+            return Clients.All.SendAsync("incrementView", ViewCount);
         }
     }
 }
