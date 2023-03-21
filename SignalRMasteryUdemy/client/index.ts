@@ -1,32 +1,26 @@
 ﻿import * as signalR from "@microsoft/signalr"
 
-// Uncomment this line to DISABLE websockets for testing
-WebSocket = undefined;
-
-var counter = document.getElementById("viewCounter");
+let btn = document.getElementById("btnGetFullName");
 
 //  Create Connection
 let connection = new signalR.HubConnectionBuilder()
-    .withUrl("/hub/view", {
-        transport: signalR.HttpTransportType.WebSockets |
-            signalR.HttpTransportType.ServerSentEvents
-    })
+    .withUrl("/hub/stringtools")
     .build();
 
-//  On View Update Message from Client
-connection.on("viewCountUpdate", (value: number) => {
-    counter.innerText = value.toString();
+btn.addEventListener("click", function (evt) {
+    var firstName = (document.getElementById("inputFirstName") as HTMLInputElement).value;
+    var lastName = (document.getElementById("inputLastName") as HTMLInputElement).value;
+
+    //  send to hub
+
+    connection.invoke("getFullName", firstName, lastName)
+        .then((name: string) => { alert(name); });
 });
 
-//  Notify server we're watching
-function notify() {
-    connection.send("notifyWatching");
-}
 
 //  Start Connection
 function startSuccess() {
     console.log("Connected.");
-    notify();
 }
 function startFail() {
     console.log("Connection failed.");
