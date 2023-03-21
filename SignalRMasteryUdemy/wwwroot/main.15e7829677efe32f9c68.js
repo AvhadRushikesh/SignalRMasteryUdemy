@@ -260,13 +260,23 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+/***/ "./client/CustomRetryPolicy.ts":
+/*!*************************************!*\
+  !*** ./client/CustomRetryPolicy.ts ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar CustomRetryPolicy = /** @class */ (function () {\n    function CustomRetryPolicy() {\n        this.maxRetryAttempts = 0;\n    }\n    CustomRetryPolicy.prototype.nextRetryDelayInMilliseconds = function (retryContext) {\n        console.info(\"Retry :: \".concat(retryContext.retryReason));\n        if (retryContext.previousRetryCount === 10)\n            return null; // stop!\n        var nextRetry = retryContext.previousRetryCount * 1000 || 1000;\n        console.log(\"Retry in \".concat(nextRetry, \" milliseconds\"));\n        return nextRetry;\n    };\n    return CustomRetryPolicy;\n}());\nexports[\"default\"] = CustomRetryPolicy;\n\n\n//# sourceURL=webpack://signalrmasteryudemy/./client/CustomRetryPolicy.ts?");
+
+/***/ }),
+
 /***/ "./client/index.ts":
 /*!*************************!*\
   !*** ./client/index.ts ***!
   \*************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar signalR = __webpack_require__(/*! @microsoft/signalr */ \"./node_modules/@microsoft/signalr/dist/esm/index.js\");\nvar pieVotes = document.getElementById(\"pieVotes\");\nvar baconVotes = document.getElementById(\"baconVotes\");\n// create connection\nvar connection = new signalR.HubConnectionBuilder()\n    .withUrl(\"/hub/vote\")\n    .build();\n// client events\nconnection.on(\"updateVotes\", function (votes) {\n    pieVotes.innerText = votes.pie;\n    baconVotes.innerText = votes.bacon;\n});\n// start the connection\nfunction startSuccess() {\n    console.log(\"Connected.\");\n    connection.invoke(\"GetCurrentVotes\").then(function (votes) {\n        pieVotes.innerText = votes.pie;\n        baconVotes.innerText = votes.bacon;\n    });\n}\nfunction startFail() {\n    console.log(\"Connection failed.\");\n}\nconnection.start().then(startSuccess, startFail);\n\n\n//# sourceURL=webpack://signalrmasteryudemy/./client/index.ts?");
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar signalR = __webpack_require__(/*! @microsoft/signalr */ \"./node_modules/@microsoft/signalr/dist/esm/index.js\");\nvar CustomRetryPolicy_1 = __webpack_require__(/*! ./CustomRetryPolicy */ \"./client/CustomRetryPolicy.ts\");\nvar counter = document.getElementById(\"viewCounter\");\n// create connection\nvar connection = new signalR.HubConnectionBuilder()\n    .withUrl(\"/hub/view\")\n    .withAutomaticReconnect(new CustomRetryPolicy_1.default())\n    .build();\n// on view update message from client\nconnection.on(\"viewCountUpdate\", function (value) {\n    counter.innerText = value.toString();\n});\n// notify server we're watching\nfunction notify() {\n    connection.send(\"notifyWatching\");\n}\n// start the connection\nfunction startSuccess() {\n    console.log(\"Connected.\");\n    notify();\n}\nfunction startFail() {\n    console.log(\"Connection failed.\");\n}\nconnection.start().then(startSuccess, startFail);\n\n\n//# sourceURL=webpack://signalrmasteryudemy/./client/index.ts?");
 
 /***/ })
 
