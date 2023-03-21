@@ -12,7 +12,7 @@ namespace SignalRMasteryUdemy.Hubs
         {
             ViewCount++;
 
-            await Clients.All.SendAsync("viewCountUpdate", ViewCount);
+            await this.Clients.All.SendAsync("viewCountUpdate", ViewCount);
         }
     }
 }

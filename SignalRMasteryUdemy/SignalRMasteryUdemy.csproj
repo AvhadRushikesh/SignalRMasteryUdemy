@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="client\customeLogger.ts" />
+    <None Remove="client\customLogger.ts" />
     <None Remove="client\index.ts" />
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="client\customeLogger.ts" />
+    <TypeScriptCompile Include="client\customLogger.ts" />
     <TypeScriptCompile Include="client\index.ts" />
   </ItemGroup>
 
