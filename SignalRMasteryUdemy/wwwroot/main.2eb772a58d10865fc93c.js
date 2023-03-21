@@ -260,23 +260,13 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
-/***/ "./client/customLogger.ts":
-/*!********************************!*\
-  !*** ./client/customLogger.ts ***!
-  \********************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.CustomLogger = void 0;\nvar CustomLogger = /** @class */ (function () {\n    function CustomLogger() {\n    }\n    CustomLogger.prototype.log = function (logLevel, message) {\n        // Use `message` and `logLevel` to record the log message to your own system\n        console.log(\"\".concat(logLevel, \" :: \").concat(message));\n    };\n    return CustomLogger;\n}());\nexports.CustomLogger = CustomLogger;\n\n\n//# sourceURL=webpack://signalrmasteryudemy/./client/customLogger.ts?");
-
-/***/ }),
-
 /***/ "./client/index.ts":
 /*!*************************!*\
   !*** ./client/index.ts ***!
   \*************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar signalR = __webpack_require__(/*! @microsoft/signalr */ \"./node_modules/@microsoft/signalr/dist/esm/index.js\");\nvar customLogger_1 = __webpack_require__(/*! ./customLogger */ \"./client/customLogger.ts\");\nvar counter = document.getElementById(\"viewCounter\");\n//  Create Connection\nvar connection = new signalR.HubConnectionBuilder()\n    //  .configureLogging(signalR.LogLevel.Trace)\n    .configureLogging(new customLogger_1.CustomLogger())\n    .withUrl(\"/hub/view\")\n    .build();\n//  On View Update Message from Client\nconnection.on(\"viewCountUpdate\", function (value) {\n    counter.innerText = value.toString();\n});\n//  Notify server we're watching\nfunction notify() {\n    connection.send(\"notifyWatching\");\n}\n//  Start Connection\nfunction startSuccess() {\n    console.log(\"Connected.\");\n    notify();\n}\nfunction startFail() {\n    console.log(\"Connection failed.\");\n}\nconnection.start().then(startSuccess, startFail);\n\n\n//# sourceURL=webpack://signalrmasteryudemy/./client/index.ts?");
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar signalR = __webpack_require__(/*! @microsoft/signalr */ \"./node_modules/@microsoft/signalr/dist/esm/index.js\");\n// Uncomment this line to DISABLE websockets for testing\nWebSocket = undefined;\nvar counter = document.getElementById(\"viewCounter\");\n//  Create Connection\nvar connection = new signalR.HubConnectionBuilder()\n    .withUrl(\"/hub/view\", {\n    transport: signalR.HttpTransportType.WebSockets |\n        signalR.HttpTransportType.ServerSentEvents\n})\n    .build();\n//  On View Update Message from Client\nconnection.on(\"viewCountUpdate\", function (value) {\n    counter.innerText = value.toString();\n});\n//  Notify server we're watching\nfunction notify() {\n    connection.send(\"notifyWatching\");\n}\n//  Start Connection\nfunction startSuccess() {\n    console.log(\"Connected.\");\n    notify();\n}\nfunction startFail() {\n    console.log(\"Connection failed.\");\n}\nconnection.start().then(startSuccess, startFail);\n\n\n//# sourceURL=webpack://signalrmasteryudemy/./client/index.ts?");
 
 /***/ })
 

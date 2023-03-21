@@ -1,14 +1,16 @@
 ﻿import * as signalR from "@microsoft/signalr"
 
-import { CustomLogger } from "./customLogger"
+// Uncomment this line to DISABLE websockets for testing
+WebSocket = undefined;
 
 var counter = document.getElementById("viewCounter");
 
 //  Create Connection
 let connection = new signalR.HubConnectionBuilder()
-    //  .configureLogging(signalR.LogLevel.Trace)
-    .configureLogging(new CustomLogger())
-    .withUrl("/hub/view")
+    .withUrl("/hub/view", {
+        transport: signalR.HttpTransportType.WebSockets |
+            signalR.HttpTransportType.ServerSentEvents
+    })
     .build();
 
 //  On View Update Message from Client
