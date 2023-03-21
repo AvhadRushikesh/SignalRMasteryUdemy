@@ -1,32 +1,26 @@
 ﻿import * as signalR from "@microsoft/signalr"
 
-let btnGetOne = document.getElementById("btnGetOne");
-let btnGetTen = document.getElementById("btnGetTen");
-let btnGetOneThousand = document.getElementById("btnGetOneThousand");
-let userJson = document.getElementById("userJson") as HTMLTextAreaElement;
-
-function receiveUsers(users) {
-    userJson.value = JSON.stringify(users, null, 2);
-}
-function clear() {
-    userJson.value = "Loading...";
-}
-
-btnGetOne.addEventListener("click", () => { clear(); connection.invoke("GetUsers", 1).then(receiveUsers); });
-btnGetTen.addEventListener("click", () => { clear(); connection.invoke("GetUsers", 10).then(receiveUsers); });
-btnGetOneThousand.addEventListener("click", () => { clear(); connection.invoke("GetUsers", 1000).then(receiveUsers); });
+let pieVotes = document.getElementById("pieVotes");
+let baconVotes = document.getElementById("baconVotes");
 
 // create connection
 let connection = new signalR.HubConnectionBuilder()
-    .configureLogging(signalR.LogLevel.Trace)
-    .withUrl("/hub/users")
+    .withUrl("/hub/vote")
     .build();
 
 // client events
+connection.on("updateVotes", (votes) => {
+    pieVotes.innerText = votes.pie;
+    baconVotes.innerText = votes.bacon;
+});
 
 // start the connection
 function startSuccess() {
     console.log("Connected.");
+    connection.invoke("GetCurrentVotes").then((votes) => {
+        pieVotes.innerText = votes.pie;
+        baconVotes.innerText = votes.bacon;
+    });
 }
 function startFail() {
     console.log("Connection failed.");
