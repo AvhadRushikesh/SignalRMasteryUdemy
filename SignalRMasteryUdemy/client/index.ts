@@ -1,17 +1,31 @@
 ﻿import * as signalR from "@microsoft/signalr";
 
-var counter = document.getElementById("viewCounter");
+var body = (document.getElementsByTagName("body")[0]) as HTMLElement;
+var btnRed = document.getElementById("btnRed") as HTMLElement;
+var btnGreen = document.getElementById("btnGreen") as HTMLElement;
+var btnBlue = document.getElementById("btnBlue") as HTMLElement;
 
 // create connection
 let connection = new signalR.HubConnectionBuilder()
-    .withUrl("/hub/view")
+    .withUrl("/hub/color")
     .build();
 
-// on view update message from client
-connection.on("viewCountUpdate", (value: number) => {
-    counter.innerText = value.toString();
+// on background change update message from client
+connection.on("changeBackground", (value: string) => {
+    body.style.backgroundColor = value;
 });
 
+function onRed() {
+    connection.invoke("changeBackground", "red").then(() => { }, (error) => { alert(error); });
+}
+
+function onGreen() {
+    connection.invoke("changeBackground", "green").then(() => { }, (error) => { alert(error); });
+}
+
+function onBlue() {
+    connection.invoke("changeBackground", "blue").then(() => { }, (error) => { alert(error); });
+}
 
 // start the connection
 function startSuccess() {
@@ -20,5 +34,9 @@ function startSuccess() {
 function startFail() {
     console.log("Connection failed.");
 }
+
+btnRed.onclick = onRed;
+btnGreen.onclick = onGreen;
+btnBlue.onclick = onBlue;
 
 connection.start().then(startSuccess, startFail);
