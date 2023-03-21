@@ -1,4 +1,5 @@
-﻿using SignalRMasteryUdemy.Hubs;
+﻿using SignalRMasteryUdemy.HostedService;
+using SignalRMasteryUdemy.Hubs;
 
 namespace SignalRMasteryUdemy
 {
@@ -8,14 +9,9 @@ namespace SignalRMasteryUdemy
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            // connection string to redis - Get from configuration! 
-            var connectionString = "";
+            services.AddSignalR();
 
-            // Add StackExchange Redis helper
-            services.AddSignalR().AddStackExchangeRedis(connectionString, configure => {
-                configure.Configuration.ChannelPrefix = "signalr";
-                configure.Configuration.DefaultDatabase = 5;
-            });
+            services.AddHostedService<TimeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -32,7 +28,7 @@ namespace SignalRMasteryUdemy
             app.UseStaticFiles();
 
             app.UseEndpoints(configure => {
-                configure.MapHub<BackgroundColorHub>("/hub/background");
+                configure.MapHub<TimeHub>("/hub/time");
             });
         }
     }
