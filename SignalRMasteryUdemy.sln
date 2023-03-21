@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRMasteryUdemy", "SignalRMasteryUdemy\SignalRMasteryUdemy.csproj", "{864B1FE5-80F9-417C-9A00-5A3DC351A666}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRMasteryUdemy", "SignalRMasteryUdemy\SignalRMasteryUdemy.csproj", "{864B1FE5-80F9-417C-9A00-5A3DC351A666}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnetclient", "dotnetclient\dotnetclient.csproj", "{E195F805-D4EA-4068-8795-B8B8D7354FE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{864B1FE5-80F9-417C-9A00-5A3DC351A666}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{864B1FE5-80F9-417C-9A00-5A3DC351A666}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{864B1FE5-80F9-417C-9A00-5A3DC351A666}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E195F805-D4EA-4068-8795-B8B8D7354FE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E195F805-D4EA-4068-8795-B8B8D7354FE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E195F805-D4EA-4068-8795-B8B8D7354FE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E195F805-D4EA-4068-8795-B8B8D7354FE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

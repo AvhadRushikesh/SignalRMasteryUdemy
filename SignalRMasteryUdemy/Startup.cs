@@ -1,5 +1,4 @@
-﻿using SignalRMasteryUdemy.HostedService;
-using SignalRMasteryUdemy.Hubs;
+﻿using SignalRMasteryUdemy.Hubs;
 
 namespace SignalRMasteryUdemy
 {
@@ -10,8 +9,6 @@ namespace SignalRMasteryUdemy
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR();
-
-            services.AddHostedService<TimeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -28,7 +25,7 @@ namespace SignalRMasteryUdemy
             app.UseStaticFiles();
 
             app.UseEndpoints(configure => {
-                configure.MapHub<TimeHub>("/hub/time");
+                configure.MapHub<BackgroundColorHub>("/hub/background");
             });
         }
     }
