@@ -1,34 +1,26 @@
 import * as signalR from "@microsoft/signalr";
-import { MessagePackHubProtocol } from "@microsoft/signalr-protocol-msgpack";
 
-let btnGetOne = document.getElementById("btnGetOne");
-let btnGetTen = document.getElementById("btnGetTen");
-let btnGetOneThousand = document.getElementById("btnGetOneThousand");
-let userJson = document.getElementById("userJson") as HTMLTextAreaElement;
-
-function receiveUsers(users) {
-    userJson.value = JSON.stringify(users, null, 2);
-}
-function clear() {
-    userJson.value = "Loading...";
-}
-
-btnGetOne.addEventListener("click", () => { clear(); connection.invoke("GetUsers", 1).then(receiveUsers); });
-btnGetTen.addEventListener("click", () => { clear(); connection.invoke("GetUsers", 10).then(receiveUsers); });
-btnGetOneThousand.addEventListener("click", () => { clear(); connection.invoke("GetUsers", 1000).then(receiveUsers); });
+var counter = document.getElementById("viewCounter");
 
 // create connection
 let connection = new signalR.HubConnectionBuilder()
-    .configureLogging(signalR.LogLevel.Trace)
-    .withHubProtocol(new MessagePackHubProtocol())
-    .withUrl("/hub/users")
+    .withUrl("/hub/view")
     .build();
 
-// client events
+// on view update message from client
+connection.on("viewCountUpdate", (value: number) => {
+    counter.innerText = value.toString();
+});
+
+// notify server we're watching
+function notify() {
+    connection.send("notifyWatching");
+}
 
 // start the connection
 function startSuccess() {
     console.log("Connected.");
+    notify();
 }
 function startFail() {
     console.log("Connection failed.");
