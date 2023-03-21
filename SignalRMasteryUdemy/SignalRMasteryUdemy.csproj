@@ -7,14 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="client\customLogger.ts" />
-    <None Remove="client\CustomRetryPolicy.ts" />
     <None Remove="client\index.ts" />
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="client\customLogger.ts" />
-    <TypeScriptCompile Include="client\CustomRetryPolicy.ts" />
     <TypeScriptCompile Include="client\index.ts" />
   </ItemGroup>
 
