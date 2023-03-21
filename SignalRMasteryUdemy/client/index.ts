@@ -1,31 +1,37 @@
 ﻿import * as signalR from "@microsoft/signalr"
 
-let btn = document.getElementById("incrementView");
-let viewCountSpan = document.getElementById("viewCount");
+let btnJoinYellow = document.getElementById("btnJoinYellow");
+let btnJoinBlue = document.getElementById("btnJoinBlue");
+let btnJoinOrange = document.getElementById("btnJoinOrange");
+let btnTriggerYellow = document.getElementById("btnTriggerYellow");
+let btnTriggerBlue = document.getElementById("btnTriggerBlue");
+let btnTriggerOrange = document.getElementById("btnTriggerOrange");
 
 //  Create Connection
 let connection = new signalR.HubConnectionBuilder()
-    .withUrl("/hub/view")
+    .withUrl("/hub/color")
     .build();
 
-btn.addEventListener("click", function (evt) {
-    //  send to hub
-    connection.invoke("IncrementServerView");
-});
+btnJoinYellow.addEventListener("click", () => { connection.invoke("JoinGroup", "Yellow"); });
+btnJoinBlue.addEventListener("click", () => { connection.invoke("JoinGroup", "Blue"); });
+btnJoinOrange.addEventListener("click", () => { connection.invoke("JoinGroup", "Orange"); });
+
+btnTriggerYellow.addEventListener("click", () => { connection.invoke("TriggerGroup", "Yellow"); });
+btnTriggerBlue.addEventListener("click", () => { connection.invoke("TriggerGroup", "Blue"); });
+btnTriggerOrange.addEventListener("click", () => { connection.invoke("TriggerGroup", "Orange"); });
 
 // client events
-connection.on("incrementView", (val) => {
-    viewCountSpan.innerText = val;
-
-    //  If value divisible 10 disconnect connection
-    if (val % 10 === 0) connection.off("incrementView");
+connection.on("triggerColor", (color) => {
+    document.getElementsByTagName("body")[0].style.backgroundColor = color;
 });
 
-//  Start Connection
+// start the connection
 function startSuccess() {
     console.log("Connected.");
+    connection.invoke("IncrementServerView");
 }
 function startFail() {
     console.log("Connection failed.");
 }
+
 connection.start().then(startSuccess, startFail);
