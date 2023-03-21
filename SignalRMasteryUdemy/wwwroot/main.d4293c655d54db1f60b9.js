@@ -260,23 +260,13 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
-/***/ "./client/CustomRetryPolicy.ts":
-/*!*************************************!*\
-  !*** ./client/CustomRetryPolicy.ts ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar CustomRetryPolicy = /** @class */ (function () {\n    function CustomRetryPolicy() {\n        this.maxRetryAttempts = 0;\n    }\n    CustomRetryPolicy.prototype.nextRetryDelayInMilliseconds = function (retryContext) {\n        console.info(\"Retry :: \".concat(retryContext.retryReason));\n        if (retryContext.previousRetryCount === 10)\n            return null; // stop!\n        var nextRetry = retryContext.previousRetryCount * 1000 || 1000;\n        console.log(\"Retry in \".concat(nextRetry, \" milliseconds\"));\n        return nextRetry;\n    };\n    return CustomRetryPolicy;\n}());\nexports[\"default\"] = CustomRetryPolicy;\n\n\n//# sourceURL=webpack://signalrmasteryudemy/./client/CustomRetryPolicy.ts?");
-
-/***/ }),
-
 /***/ "./client/index.ts":
 /*!*************************!*\
   !*** ./client/index.ts ***!
   \*************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar signalR = __webpack_require__(/*! @microsoft/signalr */ \"./node_modules/@microsoft/signalr/dist/esm/index.js\");\nvar CustomRetryPolicy_1 = __webpack_require__(/*! ./CustomRetryPolicy */ \"./client/CustomRetryPolicy.ts\");\nvar counter = document.getElementById(\"viewCounter\");\n// create connection\nvar connection = new signalR.HubConnectionBuilder()\n    .withUrl(\"/hub/view\")\n    .withAutomaticReconnect(new CustomRetryPolicy_1.default())\n    .build();\n// on view update message from client\nconnection.on(\"viewCountUpdate\", function (value) {\n    counter.innerText = value.toString();\n});\n// notify server we're watching\nfunction notify() {\n    connection.send(\"notifyWatching\");\n}\n// start the connection\nfunction startSuccess() {\n    console.log(\"Connected.\");\n    notify();\n}\nfunction startFail() {\n    console.log(\"Connection failed.\");\n}\nconnection.start().then(startSuccess, startFail);\n\n\n//# sourceURL=webpack://signalrmasteryudemy/./client/index.ts?");
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nvar signalR = __webpack_require__(/*! @microsoft/signalr */ \"./node_modules/@microsoft/signalr/dist/esm/index.js\");\nvar btnGetOne = document.getElementById(\"btnGetOne\");\nvar btnGetTen = document.getElementById(\"btnGetTen\");\nvar btnGetOneThousand = document.getElementById(\"btnGetOneThousand\");\nvar userJson = document.getElementById(\"userJson\");\nfunction receiveUsers(users) {\n    userJson.value = JSON.stringify(users, null, 2);\n}\nfunction clear() {\n    userJson.value = \"Loading...\";\n}\nbtnGetOne.addEventListener(\"click\", function () { clear(); connection.invoke(\"GetUsers\", 1).then(receiveUsers); });\nbtnGetTen.addEventListener(\"click\", function () { clear(); connection.invoke(\"GetUsers\", 10).then(receiveUsers); });\nbtnGetOneThousand.addEventListener(\"click\", function () { clear(); connection.invoke(\"GetUsers\", 1000).then(receiveUsers); });\n// create connection\nvar connection = new signalR.HubConnectionBuilder()\n    .configureLogging(signalR.LogLevel.Trace)\n    .withUrl(\"/hub/users\")\n    .build();\n// client events\n// start the connection\nfunction startSuccess() {\n    console.log(\"Connected.\");\n}\nfunction startFail() {\n    console.log(\"Connection failed.\");\n}\nconnection.start().then(startSuccess, startFail);\n\n\n//# sourceURL=webpack://signalrmasteryudemy/./client/index.ts?");
 
 /***/ })
 

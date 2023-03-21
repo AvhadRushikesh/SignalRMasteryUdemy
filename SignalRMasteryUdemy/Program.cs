@@ -9,11 +9,6 @@ namespace SignalRMasteryUdemy
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
              Host.CreateDefaultBuilder(args)
-             .ConfigureLogging(logging =>
-             {
-                 logging.AddFilter("Microsoft.AspNetCore.SignalR", LogLevel.Trace);
-                 logging.AddFilter("Microsoft.AspNetCore.Http.Connections", LogLevel.Trace);
-             })
              .ConfigureWebHostDefaults(webBuilder =>
              {
                  webBuilder.UseStartup<Startup>();
