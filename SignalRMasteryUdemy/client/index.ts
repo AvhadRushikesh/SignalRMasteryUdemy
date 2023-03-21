@@ -1,13 +1,19 @@
 ﻿import * as signalR from "@microsoft/signalr"
 
+//import { CustomLogger } from "./customeLogger"
+
+var counter = document.getElementById("viewCounter");
+
 //  Create Connection
 let connection = new signalR.HubConnectionBuilder()
+    //  .configureLogging(signalR.LogLevel.Trace)
+    //.configureLogging(new CustomLogger())
     .withUrl("/hubs/view")
     .build();
 
 //  On View Update Message from Client
 connection.on("viewCountUpdate", (value: number) => {
-    var counter = document.getElementById("viewCounter");
+    //var counter = document.getElementById("viewCounter");
     counter.innerText = value.toString();
 });
 
