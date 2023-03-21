@@ -1,31 +1,30 @@
-﻿import * as signalR from "@microsoft/signalr";
+import * as signalR from "@microsoft/signalr";
+import { MessagePackHubProtocol } from "@microsoft/signalr-protocol-msgpack";
 
-var body = (document.getElementsByTagName("body")[0]) as HTMLElement;
-var btnRed = document.getElementById("btnRed") as HTMLElement;
-var btnGreen = document.getElementById("btnGreen") as HTMLElement;
-var btnBlue = document.getElementById("btnBlue") as HTMLElement;
+let btnGetOne = document.getElementById("btnGetOne");
+let btnGetTen = document.getElementById("btnGetTen");
+let btnGetOneThousand = document.getElementById("btnGetOneThousand");
+let userJson = document.getElementById("userJson") as HTMLTextAreaElement;
+
+function receiveUsers(users) {
+    userJson.value = JSON.stringify(users, null, 2);
+}
+function clear() {
+    userJson.value = "Loading...";
+}
+
+btnGetOne.addEventListener("click", () => { clear(); connection.invoke("GetUsers", 1).then(receiveUsers); });
+btnGetTen.addEventListener("click", () => { clear(); connection.invoke("GetUsers", 10).then(receiveUsers); });
+btnGetOneThousand.addEventListener("click", () => { clear(); connection.invoke("GetUsers", 1000).then(receiveUsers); });
 
 // create connection
 let connection = new signalR.HubConnectionBuilder()
-    .withUrl("/hub/color")
+    .configureLogging(signalR.LogLevel.Trace)
+    .withHubProtocol(new MessagePackHubProtocol())
+    .withUrl("/hub/users")
     .build();
 
-// on background change update message from client
-connection.on("changeBackground", (value: string) => {
-    body.style.backgroundColor = value;
-});
-
-function onRed() {
-    connection.invoke("changeBackground", "red").then(() => { }, (error) => { alert(error); });
-}
-
-function onGreen() {
-    connection.invoke("changeBackground", "green").then(() => { }, (error) => { alert(error); });
-}
-
-function onBlue() {
-    connection.invoke("changeBackground", "blue").then(() => { }, (error) => { alert(error); });
-}
+// client events
 
 // start the connection
 function startSuccess() {
@@ -34,9 +33,5 @@ function startSuccess() {
 function startFail() {
     console.log("Connection failed.");
 }
-
-btnRed.onclick = onRed;
-btnGreen.onclick = onGreen;
-btnBlue.onclick = onBlue;
 
 connection.start().then(startSuccess, startFail);

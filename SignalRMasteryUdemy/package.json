@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@microsoft/signalr": "^7.0.4",
+    "@microsoft/signalr-protocol-msgpack": "^7.0.4",
     "@types/node": "^18.15.5"
   }
 }
