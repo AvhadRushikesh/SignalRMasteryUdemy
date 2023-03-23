@@ -9,11 +9,11 @@ namespace SignalRMasteryUdemy
         public void ConfigureServices(IServiceCollection services)
         {
             //  Go to Azure Service portal copy connection string and paste here
-            var connectionString = "";
+            // var connectionString = "";
 
             /*  When WebSocket Connects it will not connect to localhost,
                 It will connect to Azure signalR service */
-            services.AddSignalR().AddAzureSignalR(connectionString);
+            services.AddSignalR(); // .AddAzureSignalR(connectionString);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
